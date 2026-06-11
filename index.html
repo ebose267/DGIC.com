@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Save Your Seat — Daddy G.O Innovation Challenge 4.0 Grand Finale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #050A14;
+    --navy-2: #0B1626;
+    --gold: #F5A623;
+    --teal: #00D4AA;
+    --paper: #F0EDE8;
+    --paper-dim: #cfc9c1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--navy);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    min-height: 100%;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 16px 80px;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(245,166,35,0.10) 0%, transparent 45%),
+      radial-gradient(ellipse at 90% 110%, rgba(0,212,170,0.08) 0%, transparent 45%),
+      var(--navy);
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 6vw, 48px);
+    text-align: center;
+    line-height: 1.08;
+    max-width: 680px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 span { color: var(--gold); }
+
+  .subhead {
+    text-align: center;
+    color: var(--paper-dim);
+    max-width: 520px;
+    margin: 16px auto 40px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* TICKET */
+  .ticket {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    background: var(--paper);
+    color: var(--navy);
+    border-radius: 18px;
+    overflow: visible;
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(245,166,35,0.15);
+  }
+
+  .ticket-main {
+    flex: 1;
+    padding: 36px 32px;
+    position: relative;
+    border-radius: 18px 0 0 18px;
+  }
+
+  .ticket-stub {
+    width: 150px;
+    flex-shrink: 0;
+    background: var(--navy-2);
+    color: var(--paper);
+    border-radius: 0 18px 18px 0;
+    padding: 36px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  /* perforation */
+  .ticket::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 150px;
+    width: 0;
+    border-left: 2px dashed rgba(5,10,20,0.18);
+  }
+  .ticket-stub::before, .ticket-stub::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    width: 20px;
+    height: 20px;
+    background: var(--navy);
+    border-radius: 50%;
+  }
+  .ticket-stub::before { top: -10px; }
+  .ticket-stub::after { bottom: -10px; }
+
+  .ticket-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(5,10,20,0.45);
+    margin-bottom: 4px;
+  }
+
+  .ticket-event-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+
+  .ticket-meta-row {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .ticket-meta-item .ticket-label { margin-bottom: 2px; }
+  .ticket-meta-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* form */
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(5,10,20,0.55);
+    margin-bottom: 6px;
+  }
+
+  .field input[type="text"],
+  .field input[type="email"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid rgba(5,10,20,0.15);
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--navy);
+    padding: 8px 2px;
+    transition: border-color 0.15s ease;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-bottom-color: var(--gold);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 60px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .field-optional-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: rgba(5,10,20,0.35);
+    text-transform: none;
+    letter-spacing: 0.05em;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 22px 0 26px;
+    padding: 14px;
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.25);
+    border-radius: 10px;
+  }
+
+  .checkbox-row input[type="checkbox"] {
+    margin-top: 3px;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--teal);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .checkbox-row label {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(5,10,20,0.75);
+    cursor: pointer;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+  }
+
+  .submit-btn:hover {
+    box-shadow: 0 8px 24px -8px rgba(245,166,35,0.6);
+    transform: translateY(-1px);
+  }
+
+  .submit-btn:active { transform: translateY(0); }
+
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .form-error {
+    color: #c0392b;
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* stub right side */
+  .stub-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .stub-admit {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    align-self: flex-end;
+    margin: 0 auto 0 0;
+  }
+
+  .stub-icon {
+    font-size: 28px;
+  }
+
+  /* success state */
+  .success-view {
+    display: none;
+    text-align: center;
+    padding: 60px 32px;
+  }
+
+  .success-view.active { display: block; }
+  .ticket-form-wrap.hidden { display: none; }
+
+  .success-seatnum {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 56px;
+    color: var(--gold);
+    line-height: 1;
+    margin: 18px 0 6px;
+  }
+
+  .success-view h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .success-view p {
+    color: rgba(5,10,20,0.6);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  /* footer info strip */
+  .info-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+    max-width: 620px;
+    width: 100%;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(240,237,232,0.1);
+  }
+
+  .info-item {
+    flex: 1;
+    min-width: 160px;
+    text-align: center;
+  }
+
+  .info-item .ticket-label { color: var(--teal); margin-bottom: 8px; }
+  .info-item p {
+    font-size: 13px;
+    color: var(--paper-dim);
+    line-height: 1.6;
+  }
+
+  /* responsive */
+  @media (max-width: 560px) {
+    .ticket {
+      flex-direction: column-reverse;
+      border-radius: 18px;
+    }
+    .ticket-main { border-radius: 0 0 18px 18px; padding: 28px 22px; }
+    .ticket-stub {
+      border-radius: 18px 18px 0 0;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      padding: 14px 22px;
+      gap: 16px;
+    }
+    .ticket-stub::before, .ticket-stub::after {
+      left: 50%;
+      top: auto;
+      transform: translateX(-50%);
+      bottom: -10px;
+    }
+    .ticket-stub::before { top: -10px; bottom: auto; }
+    .ticket::before {
+      right: auto;
+      left: 0;
+      right: 0;
+      top: var(--perf-top, auto);
+    }
+    .ticket::before {
+      top: 100px;
+      bottom: auto;
+      left: 0;
+      right: 0;
+      border-left: none;
+      border-top: 2px dashed rgba(5,10,20,0.18);
+      height: 0;
+    }
+    .stub-bottom { display: flex; flex-direction: row; align-items: center; gap: 16px; }
+    .stub-admit { writing-mode: horizontal-tb; transform: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="eyebrow">Daddy G.O Innovation Challenge 4.0 · Grand Finale</div>
+  <h1>Your seat for July 10th is <span>waiting.</span></h1>
+  <p class="subhead">
+    500+ people. One night. The Innovation Challenge and Science/Mathematics finals,
+    live demonstrations, and ₦3,600,000 in prizes awarded. Reserve your seat now —
+    we're holding it under your name.
+  </p>
+
+  <div class="ticket">
+    <div class="ticket-main">
+
+      <div class="ticket-form-wrap" id="formWrap">
+        <div class="ticket-label">Admit One — Reserve Below</div>
+        <div class="ticket-event-name">DGIC 4.0 Grand Finale</div>
+
+        <div class="ticket-meta-row">
+          <div class="ticket-meta-item">
+            <div class="ticket-label">Date</div>
+            <div class="ticket-meta-value">10 JUL 2026</div>
+          </div>
+          <div class="ticket-meta-item">
+            <div class="ticket-label">Venue</div>
+            <div class="ticket-meta-value">UNIBEN</div>
+          </div>
+          <div class="ticket-meta-item">
+            <div class="ticket-label">Doors</div>
+            <div class="ticket-meta-value">TBA</div>
+          </div>
+        </div>
+
+        <form id="seatForm">
+          <div class="field">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" required autocomplete="name">
+          </div>
+
+          <div class="field">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+          </div>
+
+          <div class="field">
+            <label for="department">Department / Faculty</label>
+            <input type="text" id="department" name="department" required placeholder="e.g. Mechanical Engineering, Law, Pharmacy" autocomplete="organization">
+          </div>
+
+          <div class="field">
+            <label for="expectations">What are you most looking forward to? <span class="field-optional-tag">(optional)</span></label>
+            <textarea id="expectations" name="expectations" placeholder="e.g. Seeing the prototypes, the Sci/Maths quiz finals, the prize announcements..."></textarea>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="newsletter" name="newsletter" checked>
+            <label for="newsletter">
+              Keep me posted — add me to the NUESA UNIBEN newsletter for future events,
+              opportunities, and updates.
+            </label>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">Reserve My Seat</button>
+          <div class="form-error" id="formError">Something went wrong. Please try again.</div>
+        </form>
+      </div>
+
+      <div class="success-view" id="successView">
+        <div class="ticket-label">Seat Confirmed</div>
+        <div class="success-seatnum" id="seatNumber">#0000</div>
+        <h2>You're in.</h2>
+        <p>
+          Your seat for the Grand Finale is reserved. We'll send a reminder
+          closer to July 10th. See you there.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="ticket-stub">
+      <div class="stub-icon">🎟️</div>
+      <div class="stub-bottom">
+        <div>
+          <div class="ticket-label">Track</div>
+          <div class="ticket-meta-value" style="font-size:13px;">Innovation +<br>Sci/Maths</div>
+        </div>
+        <div class="stub-admit">DGIC 4.0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-strip">
+    <div class="info-item">
+      <div class="ticket-label">Why Reserve</div>
+      <p>Seating is limited. Reserved guests get priority entry and seating.</p>
+    </div>
+    <div class="info-item">
+      <div class="ticket-label">Cost</div>
+      <p>Free. This is a seat reservation, not a payment — just hold your spot.</p>
+    </div>
+    <div class="info-item">
+      <div class="ticket-label">What's On</div>
+      <p>Live builds, finals presentations, judges' verdicts, and ₦3.6M in awards.</p>
+    </div>
+  </div>
+
+<script>
+  // Replace with your deployed Google Apps Script Web App URL
+  const SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+  const form = document.getElementById('seatForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formError = document.getElementById('formError');
+  const formWrap = document.getElementById('formWrap');
+  const successView = document.getElementById('successView');
+  const seatNumber = document.getElementById('seatNumber');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    formError.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Reserving...';
+
+    const data = {
+      formType: 'saveYourSeat',
+      fullName: document.getElementById('fullName').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      department: document.getElementById('department').value.trim(),
+      expectations: document.getElementById('expectations').value.trim(),
+      newsletter: document.getElementById('newsletter').checked,
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Apps Script web apps often require no-cors from client
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(data)
+      });
+
+      // With no-cors we can't read the response body, so assume success
+      // and generate a client-side seat number for display purposes.
+      const seatNum = Math.floor(Math.random() * 400) + 100;
+      seatNumber.textContent = '#' + String(seatNum).padStart(4, '0');
+
+      formWrap.querySelector('#seatForm').style.display = 'none';
+      formWrap.querySelectorAll('.ticket-label, .ticket-event-name, .ticket-meta-row').forEach(el => el.style.display = 'none');
+      successView.classList.add('active');
+
+    } catch (err) {
+      formError.style.display = 'block';
+      formError.textContent = 'Could not reserve your seat. Please check your connection and try again.';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Reserve My Seat';
+    }
+  });
+</script>
+
+</body>
+</html>
