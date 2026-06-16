@@ -949,28 +949,31 @@
 
   /* ============================================================
      BACKEND SUBMISSION
+     ------------------------------------------------------------
+     Apps Script Web Apps do not send CORS headers, so the
+     browser blocks reading any response from a cross-origin
+     fetch(). Using mode:'no-cors' lets the request through —
+     Apps Script receives it, runs doPost(), writes the Sheet
+     row, and sends the confirmation email — but the browser
+     intentionally receives an opaque response (status 0, no
+     body). This is expected and fine.
+
+     Strategy: fire the request, wait 1.5 s for the script to
+     finish, then show the confirmation UI optimistically. The
+     server owns all the real guarantees (ticket number,
+     duplicate detection, email). If the network itself is down
+     the fetch() will throw, which we catch below.
   ============================================================ */
   async function submitReservation(data) {
-    const res = await fetch(SCRIPT_URL, {
+    await fetch(SCRIPT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-      // Apps Script Web Apps require no-cors OR the script must set
-      // CORS headers. "no-cors" means we can't read the response
-      // body, so we use a try/catch approach and trust the script
-      // to handle duplicate prevention server-side.
-      // If you have CORS configured on the script, remove the next line.
-      // mode: 'no-cors'
+      mode: 'no-cors',                       // bypasses CORS block
+      headers: { 'Content-Type': 'text/plain' }, // required with no-cors
+      body: JSON.stringify(data)
     });
-
-    if (!res.ok) {
-      throw new Error(`Server error: ${res.status}`);
-    }
-
-    const json = await res.json();
-    return json; // { ok: true, ticketNumber: 'DGIC4-0070' }
-               // or { ok: true, alreadyRegistered: true, ticketNumber: '...' }
-               // or { ok: false, error: '...' }
+    // Give Apps Script ~1.5 s to process before we update the UI.
+    // The request has already left the browser at this point.
+    await new Promise(resolve => setTimeout(resolve, 1500));
   }
 
   /* ============================================================
@@ -1040,26 +1043,25 @@
     errorBanner.textContent = '';
   }
 
-  function showConfirm(data, ticketNumber, isReturn) {
+  function showConfirm(data) {
     const firstName = data.fullName.split(' ')[0];
-    const verb = isReturn ? 'Already reserved' : 'You\'re in';
 
-    confirmHeading.textContent = isReturn
-      ? `Welcome back, ${firstName}.`
-      : `You're in, ${firstName}.`;
+    confirmHeading.textContent = `You're in, ${firstName}.`;
+    confirmBody.textContent    = 'Your seat is confirmed.';
 
-    confirmBody.textContent = isReturn
-      ? 'You already have a seat reserved with this email.'
-      : 'Your seat is confirmed.';
+    // Ticket number comes from the confirmation email — hide the
+    // display chip and replace with an explanatory line instead.
+    ticketNumDisplay.style.display = 'none';
 
-    ticketNumDisplay.textContent = ticketNumber;
-    ticketNumDisplay.setAttribute('aria-label', `Your ticket number: ${ticketNumber}`);
-
-    confirmEmailLine.innerHTML = `Check <strong>${data.email}</strong> for your confirmation email and .ics calendar file.`;
+    confirmEmailLine.innerHTML =
+      `Your ticket number and calendar invite are on their way to ` +
+      `<strong>${data.email}</strong>. ` +
+      `Check your inbox (and spam) in the next minute.`;
 
     gcalBtn.href = buildGCalUrl();
 
     ticket.classList.add('confirmed');
+    confirmPanel.setAttribute('tabindex', '-1');
     confirmPanel.focus();
     confirmPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -1084,24 +1086,19 @@
     setLoading(true);
 
     try {
-      const result = await submitReservation(data);
-
-      if (result.ok) {
-        showConfirm(data, result.ticketNumber, result.alreadyRegistered === true);
-      } else {
-        // Server returned ok: false with an error message
-        showBanner(result.error || 'Something went wrong. Please try again.');
-        setLoading(false);
-      }
+      await submitReservation(data);
+      // Request fired successfully. The script handles ticket
+      // numbering and sends the confirmation email server-side.
+      // We show confirmation optimistically — the email the user
+      // receives is the source of truth for their ticket number.
+      showConfirm(data);
 
     } catch (err) {
-      // Network error or non-JSON response
-      // Apps Script sometimes returns an HTML redirect on first deploy —
-      // if the script is correctly deployed and CORS allows it, this
-      // won't fire. Otherwise, surface a friendly message.
+      // Only reaches here if the network itself is unavailable
+      // (fetch throws before the request leaves the browser).
       console.error('Submission error:', err);
       showBanner(
-        'Couldn\'t connect to the server. Check your internet connection and try again. ' +
+        'No internet connection. Check your network and try again. ' +
         'If the problem persists, reach us on Telegram.'
       );
       setLoading(false);
