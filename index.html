@@ -18,6 +18,7 @@
     --indigo: #3242A1;
     --black: #0B0B0C;
     --gold: #E8B33D;
+    --error: #FF8A8A;
 
     --surface: #131418;
     --surface-2: #1B1D24;
@@ -32,21 +33,24 @@
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  * { box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Inter', -apple-system, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    scroll-behavior: smooth;
-  }
+  html { scroll-behavior: smooth; }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
   }
 
   img { max-width: 100%; display: block; }
@@ -60,29 +64,19 @@
     border-radius: 4px;
   }
 
-  .display {
-    font-family: 'Sora', sans-serif;
-    letter-spacing: -0.02em;
-  }
+  /* ---- UTILITY ---- */
+  .display { font-family: 'Sora', sans-serif; letter-spacing: -0.02em; }
+  .mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.02em; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
 
-  .mono {
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: 0.02em;
-  }
-
-  .wrap {
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-
-  /* ---------- TOP BAR ---------- */
+  /* ---- TOPBAR ---- */
   .topbar {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(11,11,12,0.78);
-    backdrop-filter: blur(10px);
+    background: rgba(11,11,12,0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
   }
   .topbar-inner {
@@ -104,11 +98,13 @@
     font-size: 18px;
     letter-spacing: -0.02em;
   }
+  .wordmark .dg .accent { color: var(--cyan); }
   .wordmark .ver {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
     color: var(--gold);
     font-weight: 600;
+    letter-spacing: 0.06em;
   }
   .topbar-cta {
     font-family: 'Inter', sans-serif;
@@ -116,9 +112,10 @@
     font-size: 13px;
     color: var(--black);
     background: var(--cyan);
-    padding: 8px 16px;
+    padding: 8px 18px;
     border-radius: 100px;
     transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+    white-space: nowrap;
   }
   .topbar-cta:hover {
     background: var(--white);
@@ -126,44 +123,45 @@
     transform: translateY(-1px);
   }
 
-  /* ---------- HERO ---------- */
+  /* ---- HERO ---- */
   .hero {
-    padding: 36px 20px 28px;
+    padding: 48px 20px 36px;
   }
   .eyebrow {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.12em;
+    font-size: 11px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--cyan);
-    margin: 0 0 14px;
     text-align: center;
+    margin-bottom: 20px;
   }
   .poster-frame {
-    max-width: 460px;
+    max-width: 440px;
     margin: 0 auto;
     border-radius: var(--radius-lg);
     overflow: hidden;
     border: 1px solid var(--border);
-    box-shadow: 0 30px 80px -20px rgba(0, 142, 254, 0.25), 0 10px 30px -10px rgba(0,0,0,0.6);
+    box-shadow:
+      0 0 0 1px rgba(56,200,254,0.08),
+      0 30px 80px -20px rgba(0,142,254,0.3),
+      0 10px 30px -10px rgba(0,0,0,0.7);
   }
-  .poster-frame img {
-    width: 100%;
-    height: auto;
-  }
+  .poster-frame img { width: 100%; height: auto; }
 
-  /* ---------- QUICK FACTS STRIP ---------- */
+  /* ---- FACTS STRIP ---- */
   .facts {
-    max-width: 700px;
+    max-width: 640px;
     margin: 28px auto 0;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     overflow: hidden;
+    background: var(--surface);
   }
   .fact {
-    padding: 16px 12px;
+    padding: 18px 14px;
     text-align: center;
     border-right: 1px solid var(--border);
   }
@@ -174,73 +172,88 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-faint);
-    margin: 0 0 6px;
+    margin-bottom: 6px;
   }
   .fact-value {
     font-family: 'Sora', sans-serif;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--white);
-    margin: 0;
     line-height: 1.3;
   }
 
-  /* ---------- SECTION HEADER ---------- */
+  /* ---- SECTION HEAD ---- */
   .section-head {
     text-align: center;
-    margin: 64px auto 28px;
+    margin: 72px auto 32px;
     max-width: 520px;
+    padding: 0 20px;
   }
   .section-head h2 {
     font-size: clamp(26px, 5vw, 34px);
     font-weight: 800;
-    margin: 0 0 10px;
+    margin-bottom: 12px;
   }
   .section-head p {
     color: var(--text-dim);
     font-size: 15px;
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.65;
   }
 
-  /* ---------- TICKET ---------- */
+  /* ---- TICKET SHELL ---- */
   .ticket-shell {
     max-width: 700px;
-    margin: 0 auto 80px;
-    position: relative;
+    margin: 0 auto 100px;
   }
+
+  /* ---- TICKET ---- */
   .ticket {
-    background: linear-gradient(165deg, var(--surface) 0%, var(--surface-2) 100%);
+    background: linear-gradient(160deg, var(--surface) 0%, var(--surface-2) 100%);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    display: grid;
-    grid-template-columns: 1fr 220px;
     position: relative;
     overflow: visible;
   }
-  .ticket-main {
-    padding: 32px 32px 30px;
+
+  /* Two-column layout: form + stub */
+  .ticket-body {
+    display: grid;
+    grid-template-columns: 1fr 210px;
   }
-  .ticket-side {
-    padding: 32px 22px;
+
+  .ticket-main {
+    padding: 36px 32px 32px;
+  }
+
+  .ticket-stub {
+    padding: 32px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     text-align: center;
-    gap: 14px;
   }
 
-  /* perforation: vertical, desktop */
-  .perf-v {
+  /* Perforation */
+  .perf {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: calc(100% - 220px);
-    width: 0;
-    border-left: 2px dashed rgba(254,254,254,0.18);
+    left: calc(100% - 210px);
+    pointer-events: none;
   }
-  .perf-v::before, .perf-v::after {
+  .perf::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-left: 2px dashed rgba(254,254,254,0.15);
+  }
+  /* notch circles */
+  .perf::after,
+  .perf-top {
     content: '';
     position: absolute;
     width: 26px;
@@ -249,8 +262,11 @@
     border-radius: 50%;
     left: -13px;
   }
-  .perf-v::before { top: -13px; }
-  .perf-v::after { bottom: -13px; }
+  .perf::after { bottom: -13px; }
+  .perf-top {
+    top: -13px;
+    left: -13px;
+  }
 
   .ticket-eyebrow {
     font-family: 'IBM Plex Mono', monospace;
@@ -258,27 +274,29 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-faint);
-    margin: 0 0 4px;
+    margin-bottom: 4px;
   }
   .ticket-title {
     font-family: 'Sora', sans-serif;
     font-weight: 800;
     font-size: 22px;
-    margin: 0 0 22px;
+    margin-bottom: 26px;
   }
 
-  .field {
-    margin-bottom: 16px;
-  }
+  /* ---- FIELDS ---- */
+  .field { margin-bottom: 18px; }
+  .field:last-of-type { margin-bottom: 0; }
+
   .field label {
     display: block;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 600;
     color: var(--text-dim);
-    margin-bottom: 6px;
+    margin-bottom: 7px;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
   }
+
   .field input,
   .field select {
     width: 100%;
@@ -289,31 +307,53 @@
     font-size: 15px;
     padding: 12px 14px;
     border-radius: var(--radius-sm);
-    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    transition: border-color 0.18s var(--ease), background 0.18s var(--ease);
     appearance: none;
+    -webkit-appearance: none;
   }
+
   .field select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1L7 7L13 1' stroke='%2338C8FE' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
-    padding-right: 38px;
+    padding-right: 40px;
+    cursor: pointer;
   }
+
+  .field select option { background: #1B1D24; color: var(--white); }
+
   .field input::placeholder { color: var(--text-faint); }
+
   .field input:focus,
   .field select:focus {
     border-color: var(--cyan);
-    background: rgba(56,200,254,0.06);
+    background: rgba(56,200,254,0.05);
     outline: none;
   }
-  .field-other {
-    margin-top: 10px;
-  }
-  .field-other.is-hidden { display: none; }
 
+  /* Other faculty reveal */
+  .field-other { margin-top: 12px; }
+  .field-other.hidden { display: none; }
+
+  /* Error states */
+  .error-msg {
+    color: var(--error);
+    font-size: 12px;
+    margin-top: 6px;
+    display: none;
+  }
+  .field.has-error input,
+  .field.has-error select {
+    border-color: var(--error);
+    background: rgba(255,138,138,0.05);
+  }
+  .field.has-error .error-msg { display: block; }
+
+  /* ---- SUBMIT BUTTON ---- */
   .submit-btn {
     width: 100%;
-    margin-top: 6px;
-    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    margin-top: 24px;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 100%);
     color: var(--black);
     font-family: 'Sora', sans-serif;
     font-weight: 700;
@@ -322,82 +362,142 @@
     border: none;
     border-radius: 100px;
     cursor: pointer;
-    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), opacity 0.2s var(--ease);
-    box-shadow: 0 12px 30px -8px rgba(0,142,254,0.5);
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), opacity 0.2s;
+    box-shadow: 0 12px 32px -8px rgba(0,142,254,0.45);
+    position: relative;
+    overflow: hidden;
   }
-  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -8px rgba(56,200,254,0.6); }
-  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px -8px rgba(56,200,254,0.55);
+  }
+  .submit-btn:active:not(:disabled) { transform: translateY(0); }
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .submit-btn .btn-text { display: block; }
+  .submit-btn .btn-spinner { display: none; }
+  .submit-btn.loading .btn-text { display: none; }
+  .submit-btn.loading .btn-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
 
-  .side-coin {
-    width: 56px;
-    height: 56px;
+  /* Spinner dots */
+  .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--black);
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #f6dca0, var(--gold) 60%, #a9791f 100%);
-    border: 2px solid rgba(254,254,254,0.25);
+    animation: bounce 1.2s ease-in-out infinite;
   }
-  .side-admit {
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* ---- STUB / SIDE ---- */
+  .stub-coin {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f6dca0, var(--gold) 55%, #a9791f 100%);
+    border: 2px solid rgba(254,254,254,0.2);
+    flex-shrink: 0;
+  }
+  .stub-label {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.18em;
+    font-size: 10px;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--text-dim);
+    color: var(--text-faint);
   }
-  .side-event {
+  .stub-event {
     font-family: 'Sora', sans-serif;
     font-weight: 700;
-    font-size: 14px;
-    line-height: 1.35;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--white);
   }
   .barcode {
     display: flex;
     gap: 2px;
-    height: 30px;
+    height: 32px;
     align-items: stretch;
-    opacity: 0.55;
+    opacity: 0.45;
   }
   .barcode span {
     background: var(--white);
-    width: 2px;
+    border-radius: 1px;
+    flex-shrink: 0;
   }
-  .barcode span:nth-child(3n) { width: 3px; }
-  .barcode span:nth-child(5n) { width: 1px; }
 
-  /* ---------- CONFIRMATION STATE ---------- */
-  .confirm {
+  /* ---- GLOBAL ERROR BANNER ---- */
+  .error-banner {
     display: none;
-    padding: 40px 32px 36px;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(255,138,138,0.1);
+    border: 1px solid rgba(255,138,138,0.3);
+    border-radius: var(--radius-sm);
+    color: var(--error);
+    font-size: 13.5px;
+    line-height: 1.5;
     text-align: center;
   }
-  .confirm.is-active { display: block; }
-  .ticket.is-confirmed .ticket-main,
-  .ticket.is-confirmed .ticket-side,
-  .ticket.is-confirmed .perf-v { display: none; }
+  .error-banner.visible { display: block; }
+
+  /* ---- CONFIRMATION STATE ---- */
+  .ticket-confirm {
+    display: none;
+    padding: 48px 32px 44px;
+    text-align: center;
+  }
+  .ticket.confirmed .ticket-body,
+  .ticket.confirmed .perf,
+  .ticket.confirmed .perf-top { display: none; }
+  .ticket.confirmed .ticket-confirm { display: block; }
 
   .confirm-badge {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 18px;
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 22px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--blue), var(--cyan));
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .confirm-badge svg { width: 28px; height: 28px; }
-  .confirm h3 {
-    font-family: 'Sora', sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-    margin: 0 0 10px;
-  }
-  .confirm p {
+  .confirm-badge svg { width: 30px; height: 30px; }
+
+  .confirm-h { font-size: clamp(22px, 5vw, 28px); font-weight: 800; margin-bottom: 10px; }
+  .confirm-p {
     color: var(--text-dim);
     font-size: 15px;
-    line-height: 1.6;
-    max-width: 420px;
-    margin: 0 auto 28px;
+    line-height: 1.65;
+    max-width: 400px;
+    margin: 0 auto 10px;
   }
-  .confirm p strong { color: var(--white); }
+  .confirm-p strong { color: var(--white); }
+
+  .ticket-number-display {
+    display: inline-block;
+    margin: 10px 0 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    padding: 10px 22px;
+    background: rgba(56,200,254,0.08);
+    border: 1px solid rgba(56,200,254,0.25);
+    border-radius: 100px;
+  }
 
   .cal-actions {
     display: flex;
@@ -411,321 +511,485 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 13px 18px;
+    padding: 13px 20px;
     border-radius: 100px;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
     border: 1px solid var(--border);
-    transition: transform 0.2s var(--ease), border-color 0.2s var(--ease);
+    background: transparent;
+    color: var(--white);
+    transition: transform 0.2s var(--ease), border-color 0.2s;
+    text-decoration: none;
   }
   .cal-btn:hover { transform: translateY(-1px); border-color: var(--cyan); text-decoration: none; }
-  .cal-btn.primary {
+  .cal-btn.cal-primary {
     background: var(--white);
     color: var(--black);
     border: none;
   }
-  .cal-btn.secondary {
-    background: transparent;
-    color: var(--white);
-  }
-  .cal-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .cal-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-  .confirm-footnote {
-    margin-top: 26px;
+  .confirm-note {
+    margin-top: 28px;
     font-size: 13px;
     color: var(--text-faint);
   }
 
-  .error-text {
-    color: #FF8A8A;
-    font-size: 12.5px;
-    margin-top: 6px;
+  /* ---- DUPLICATE STATE ---- */
+  .duplicate-notice {
     display: none;
+    margin-top: 20px;
+    padding: 14px 18px;
+    background: rgba(232,179,61,0.08);
+    border: 1px solid rgba(232,179,61,0.25);
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    color: var(--gold);
+    line-height: 1.55;
+    text-align: center;
   }
-  .field.has-error input,
-  .field.has-error select { border-color: #FF8A8A; }
-  .field.has-error .error-text { display: block; }
+  .duplicate-notice strong { color: #f6dca0; }
+  .duplicate-notice.visible { display: block; }
 
-  /* ---------- FOOTER ---------- */
+  /* ---- FOOTER ---- */
   footer {
     border-top: 1px solid var(--border);
-    padding: 32px 20px 50px;
+    padding: 36px 20px 56px;
     text-align: center;
   }
   footer p {
-    margin: 4px 0;
     font-size: 13px;
     color: var(--text-faint);
+    margin-bottom: 5px;
   }
-  footer .fname {
-    color: var(--text-dim);
-    font-weight: 600;
-  }
+  footer .f-name { color: var(--text-dim); font-weight: 600; }
 
-  /* ---------- RESPONSIVE ---------- */
-  @media (max-width: 680px) {
-    .ticket {
-      grid-template-columns: 1fr;
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 640px) {
+    .ticket-body { grid-template-columns: 1fr; }
+
+    .perf, .perf-top { display: none; }
+
+    /* horizontal dashed separator between form and stub on mobile */
+    .ticket-stub {
+      border-top: 2px dashed rgba(254,254,254,0.15);
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px 24px;
+      gap: 12px;
     }
-    .perf-v {
-      position: static;
-      border-left: none;
-      border-top: 2px dashed rgba(254,254,254,0.18);
-      margin: 0 32px;
-    }
-    .perf-v::before, .perf-v::after {
-      top: -13px;
-      left: auto;
-    }
-    .perf-v::before { left: -13px; }
-    .perf-v::after { left: auto; right: -13px; }
-    .ticket-side { order: 2; flex-direction: row; justify-content: center; flex-wrap: wrap; }
-    .ticket-main { order: 1; }
+    .ticket-main { padding: 28px 24px 24px; }
+
     .facts { grid-template-columns: 1fr; }
     .fact { border-right: none; border-bottom: 1px solid var(--border); }
     .fact:last-child { border-bottom: none; }
+
+    .section-head { margin-top: 52px; }
   }
 </style>
 </head>
 <body>
 
-  <div class="topbar">
+  <!-- ============ TOPBAR ============ -->
+  <header class="topbar" role="banner">
     <div class="topbar-inner">
       <div class="wordmark">
-        <span class="dg">DG<span style="color:var(--cyan)">4.0</span></span>
+        <span class="dg display">DG<span class="accent">4.0</span></span>
         <span class="ver mono">INNOVATION CHALLENGE</span>
       </div>
       <a href="#reserve" class="topbar-cta">Reserve seat</a>
     </div>
-  </div>
+  </header>
 
   <main>
-    <section class="hero">
-      <p class="eyebrow">NUESA UNIBEN PRESENTS</p>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" aria-label="Event poster">
+      <p class="eyebrow mono">NUESA UNIBEN PRESENTS</p>
       <div class="poster-frame">
         <img
           src="https://res.cloudinary.com/dc2gwj09q/image/upload/v1781528184/SAVE_20260615_133559_jzevyu.jpg"
-          alt="Daddy G.O Innovation Challenge 4.0 — Grand Finale, July 10 2026"
+          alt="Daddy G.O Innovation Challenge 4.0 — Grand Finale, July 10 2026, Akin Deko Auditorium"
           loading="eager"
+          fetchpriority="high"
+          width="440"
         />
       </div>
 
-      <div class="facts">
-        <div class="fact">
+      <div class="facts" role="list" aria-label="Event details">
+        <div class="fact" role="listitem">
           <p class="fact-label mono">Date</p>
-          <p class="fact-value">Jul 10, 2026</p>
+          <p class="fact-value display">Jul 10, 2026</p>
         </div>
-        <div class="fact">
+        <div class="fact" role="listitem">
           <p class="fact-label mono">Time</p>
-          <p class="fact-value">9:00AM – 4:00PM</p>
+          <p class="fact-value display">9 AM – 4 PM</p>
         </div>
-        <div class="fact">
+        <div class="fact" role="listitem">
           <p class="fact-label mono">Venue</p>
-          <p class="fact-value">Akin Deko Auditorium</p>
+          <p class="fact-value display">Akin Deko Auditorium</p>
         </div>
       </div>
     </section>
 
-    <section id="reserve">
+    <!-- ============ RESERVATION FORM ============ -->
+    <section id="reserve" aria-label="Seat reservation">
       <div class="section-head">
         <h2 class="display">Reserve your seat</h2>
-        <p>Fill this in to lock your spot at the Grand Finale. Your seat number and ticket confirmation will be sent to your email.</p>
+        <p>Fill this in to lock your spot at the Grand Finale. Your ticket number and confirmation will be sent to your email immediately.</p>
       </div>
 
       <div class="ticket-shell wrap">
-        <form class="ticket" id="seatForm" novalidate>
+        <div class="ticket" id="ticket" role="region" aria-label="Reservation ticket">
 
-          <div class="ticket-main">
-            <p class="ticket-eyebrow mono">Admission Form</p>
-            <h3 class="ticket-title display">Your details</h3>
+          <!-- Perforation: desktop only -->
+          <div class="perf" aria-hidden="true">
+            <div class="perf-top"></div>
+          </div>
 
-            <div class="field" id="field-name">
-              <label for="fullName">Full name</label>
-              <input type="text" id="fullName" name="fullName" placeholder="e.g. Ada Eze" required autocomplete="name" />
-              <p class="error-text">Enter your full name.</p>
-            </div>
+          <!-- Two-column layout -->
+          <div class="ticket-body">
 
-            <div class="field" id="field-email">
-              <label for="email">Email address</label>
-              <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" />
-              <p class="error-text">Enter a valid email address.</p>
-            </div>
+            <!-- MAIN: form -->
+            <div class="ticket-main">
+              <p class="ticket-eyebrow mono">Admission Form</p>
+              <h3 class="ticket-title display">Your details</h3>
 
-            <div class="field" id="field-phone">
-              <label for="phone">Phone number</label>
-              <input type="tel" id="phone" name="phone" placeholder="080X XXX XXXX" required autocomplete="tel" />
-              <p class="error-text">Enter a valid phone number.</p>
-            </div>
+              <form id="reserveForm" novalidate aria-label="Seat reservation form">
 
-            <div class="field" id="field-faculty">
-              <label for="faculty">Faculty</label>
-              <select id="faculty" name="faculty" required>
-                <option value="" disabled selected>Select your faculty</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Structural Laboratory Technology">Structural Laboratory Technology</option>
-                <option value="Physical Science">Physical Science</option>
-                <option value="Other">Other</option>
-              </select>
-              <p class="error-text">Select your faculty.</p>
+                <!-- Full Name -->
+                <div class="field" id="field-name">
+                  <label for="fullName">Full name</label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    placeholder="Ada Eze"
+                    required
+                    autocomplete="name"
+                    aria-describedby="err-name"
+                  />
+                  <p class="error-msg" id="err-name" role="alert">Enter your full name.</p>
+                </div>
 
-              <div class="field-other is-hidden" id="otherWrap">
-                <label for="facultyOther">Type your faculty</label>
-                <input type="text" id="facultyOther" name="facultyOther" placeholder="e.g. Medicine" autocomplete="off" />
+                <!-- Email -->
+                <div class="field" id="field-email">
+                  <label for="email">Email address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    required
+                    autocomplete="email"
+                    aria-describedby="err-email"
+                  />
+                  <p class="error-msg" id="err-email" role="alert">Enter a valid email address.</p>
+                </div>
+
+                <!-- Phone -->
+                <div class="field" id="field-phone">
+                  <label for="phone">Phone number</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="080X XXX XXXX"
+                    required
+                    autocomplete="tel"
+                    aria-describedby="err-phone"
+                  />
+                  <p class="error-msg" id="err-phone" role="alert">Enter a valid phone number (at least 10 digits).</p>
+                </div>
+
+                <!-- Faculty -->
+                <div class="field" id="field-faculty">
+                  <label for="faculty">Faculty</label>
+                  <select
+                    id="faculty"
+                    name="faculty"
+                    required
+                    aria-describedby="err-faculty"
+                  >
+                    <option value="" disabled selected>Select your faculty</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Structural Laboratory Technology">Structural Laboratory Technology</option>
+                    <option value="Physical Science">Physical Science</option>
+                    <option value="Other">Other (specify below)</option>
+                  </select>
+                  <p class="error-msg" id="err-faculty" role="alert">Select your faculty.</p>
+
+                  <!-- Other faculty input -->
+                  <div class="field-other hidden" id="otherWrap">
+                    <label for="facultyOther">Specify faculty</label>
+                    <input
+                      type="text"
+                      id="facultyOther"
+                      name="facultyOther"
+                      placeholder="e.g. Medicine"
+                      autocomplete="off"
+                      aria-describedby="err-facultyOther"
+                    />
+                    <p class="error-msg" id="err-facultyOther" role="alert">Please specify your faculty.</p>
+                  </div>
+                </div>
+
+                <!-- Duplicate notice (shown inline before submit if needed) -->
+                <div class="duplicate-notice" id="duplicateNotice" role="status"></div>
+
+                <!-- Submit -->
+                <button type="submit" class="submit-btn" id="submitBtn" aria-live="polite">
+                  <span class="btn-text">Reserve my seat</span>
+                  <span class="btn-spinner" aria-label="Reserving your seat…">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </button>
+
+                <!-- Global error banner -->
+                <div class="error-banner" id="errorBanner" role="alert"></div>
+
+              </form>
+            </div><!-- /.ticket-main -->
+
+            <!-- STUB: decorative right panel -->
+            <div class="ticket-stub" aria-hidden="true">
+              <div class="stub-coin"></div>
+              <p class="stub-label mono">Admit one</p>
+              <p class="stub-event display">Grand Finale<br/>Jul 10, 2026</p>
+              <div class="barcode">
+                <span style="height:100%;width:2px"></span>
+                <span style="height:70%;width:2px"></span>
+                <span style="height:100%;width:3px"></span>
+                <span style="height:55%;width:1px"></span>
+                <span style="height:100%;width:2px"></span>
+                <span style="height:80%;width:2px"></span>
+                <span style="height:100%;width:3px"></span>
+                <span style="height:60%;width:1px"></span>
+                <span style="height:100%;width:2px"></span>
+                <span style="height:90%;width:2px"></span>
+                <span style="height:65%;width:3px"></span>
+                <span style="height:100%;width:2px"></span>
+                <span style="height:75%;width:1px"></span>
+                <span style="height:100%;width:2px"></span>
+                <span style="height:50%;width:3px"></span>
+                <span style="height:100%;width:2px"></span>
               </div>
+            </div><!-- /.ticket-stub -->
+
+          </div><!-- /.ticket-body -->
+
+          <!-- ============ CONFIRMATION STATE ============ -->
+          <div class="ticket-confirm" id="confirmPanel" aria-live="polite">
+            <div class="confirm-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#0B0B0C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
             </div>
+            <h3 class="confirm-h display" id="confirmHeading">You're in.</h3>
+            <p class="confirm-p" id="confirmBody">Your seat is confirmed.</p>
+            <div class="ticket-number-display mono" id="ticketNumberDisplay" aria-label="Your ticket number"></div>
+            <p class="confirm-p" style="margin-bottom:0;" id="confirmEmailLine"></p>
 
-            <button type="submit" class="submit-btn" id="submitBtn">Reserve my seat</button>
-          </div>
-
-          <div class="perf-v" aria-hidden="true"></div>
-
-          <div class="ticket-side">
-            <div class="side-coin" aria-hidden="true"></div>
-            <p class="side-admit mono">Admit one</p>
-            <p class="side-event">Grand Finale<br/>Jul 10, 2026</p>
-            <div class="barcode" aria-hidden="true">
-              <span style="height:100%"></span><span style="height:70%"></span><span style="height:100%"></span><span style="height:55%"></span><span style="height:100%"></span><span style="height:80%"></span><span style="height:100%"></span><span style="height:60%"></span><span style="height:100%"></span><span style="height:90%"></span><span style="height:65%"></span><span style="height:100%"></span><span style="height:75%"></span><span style="height:100%"></span><span style="height:50%"></span><span style="height:100%"></span>
-            </div>
-          </div>
-
-          <div class="confirm" id="confirmPanel">
-            <div class="confirm-badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#0B0B0C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
-            <h3 class="display" id="confirmName">You're in.</h3>
-            <p id="confirmBody">Your seat confirmation and ticket number are on their way to your email.</p>
-
-            <div class="cal-actions">
-              <a href="#" id="gcalBtn" class="cal-btn primary" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <div class="cal-actions" style="margin-top:28px;">
+              <a href="#" id="gcalBtn" class="cal-btn cal-primary" target="_blank" rel="noopener noreferrer" aria-label="Add event to Google Calendar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
                 Add to Google Calendar
               </a>
-              <button type="button" id="icsBtn" class="cal-btn secondary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <button type="button" id="icsBtn" class="cal-btn" aria-label="Download calendar file for Apple or Outlook">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
                 Download .ics (Apple / Outlook)
               </button>
             </div>
 
-            <p class="confirm-footnote">Didn't get the email? Check spam, or message us on <a href="https://t.me/+3pYyDiMcHAc0ZjE8" target="_blank" rel="noopener">Telegram</a>.</p>
-          </div>
+            <p class="confirm-note">
+              Didn't get the email? Check spam — or reach us on
+              <a href="https://t.me/+3pYyDiMcHAc0ZjE8" target="_blank" rel="noopener noreferrer">Telegram</a>.
+            </p>
+          </div><!-- /.ticket-confirm -->
 
-        </form>
-      </div>
+        </div><!-- /.ticket -->
+      </div><!-- /.ticket-shell -->
     </section>
+
   </main>
 
   <footer>
-    <p class="fname">Daddy G.O Innovation Challenge 4.0</p>
+    <p class="f-name">Daddy G.O Innovation Challenge 4.0</p>
     <p>NUESA UNIBEN · Akin Deko Auditorium, University of Benin · Jul 10, 2026</p>
     <p><a href="mailto:daddygoinnovationchallenge9@gmail.com">daddygoinnovationchallenge9@gmail.com</a></p>
   </footer>
 
 <script>
-  // ---------------------------------------------------------------
-  // EVENT DETAILS (single source of truth for calendar generation)
-  // ---------------------------------------------------------------
+  'use strict';
+
+  /* ============================================================
+     CONFIG
+  ============================================================ */
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxe-GP72H571DXZPuXkGApwkJkbECNMltp6Rp2vHYnj1CrpY2SvJyAX2-vYhOQ6rWovZw/exec';
+
   const EVENT = {
-    title: "Daddy G.O Innovation Challenge 4.0 — Grand Finale",
-    location: "Akin Deko Auditorium, University of Benin, Benin City, Edo State",
-    description: "Grand Finale of the Daddy G.O Innovation Challenge 4.0, hosted by NUESA UNIBEN. Innovation Challenge presentations, Science & Mathematics prize disbursement, and award ceremony.",
-    // 9:00 AM - 4:00 PM WAT (UTC+1, no DST) => 08:00 - 15:00 UTC
-    startUTC: "20260710T080000Z",
-    endUTC:   "20260710T150000Z"
+    title: 'Daddy G.O Innovation Challenge 4.0 — Grand Finale',
+    location: 'Akin Deko Auditorium, University of Benin, Benin City, Edo State',
+    description: 'Grand Finale of the Daddy G.O Innovation Challenge 4.0, hosted by NUESA UNIBEN. Innovation Challenge presentations, Science & Mathematics prize disbursement, and award ceremony.',
+    startUTC: '20260710T080000Z',
+    endUTC:   '20260710T150000Z'
   };
 
-  // ---------------------------------------------------------------
-  // FACULTY "OTHER" TOGGLE
-  // ---------------------------------------------------------------
-  const facultySelect = document.getElementById('faculty');
-  const otherWrap = document.getElementById('otherWrap');
-  const facultyOtherInput = document.getElementById('facultyOther');
+  /* ============================================================
+     DOM REFS
+  ============================================================ */
+  const form            = document.getElementById('reserveForm');
+  const submitBtn       = document.getElementById('submitBtn');
+  const ticket          = document.getElementById('ticket');
+  const confirmPanel    = document.getElementById('confirmPanel');
+  const confirmHeading  = document.getElementById('confirmHeading');
+  const confirmBody     = document.getElementById('confirmBody');
+  const confirmEmailLine = document.getElementById('confirmEmailLine');
+  const ticketNumDisplay = document.getElementById('ticketNumberDisplay');
+  const gcalBtn         = document.getElementById('gcalBtn');
+  const icsBtn          = document.getElementById('icsBtn');
+  const errorBanner     = document.getElementById('errorBanner');
+  const duplicateNotice = document.getElementById('duplicateNotice');
+  const facultySelect   = document.getElementById('faculty');
+  const otherWrap       = document.getElementById('otherWrap');
+  const facultyOther    = document.getElementById('facultyOther');
 
+  /* ============================================================
+     FACULTY "OTHER" TOGGLE
+  ============================================================ */
   facultySelect.addEventListener('change', () => {
-    if (facultySelect.value === 'Other') {
-      otherWrap.classList.remove('is-hidden');
-      facultyOtherInput.setAttribute('required', 'required');
+    const isOther = facultySelect.value === 'Other';
+    otherWrap.classList.toggle('hidden', !isOther);
+    if (isOther) {
+      facultyOther.setAttribute('required', '');
+      facultyOther.focus();
     } else {
-      otherWrap.classList.add('is-hidden');
-      facultyOtherInput.removeAttribute('required');
-      facultyOtherInput.value = '';
+      facultyOther.removeAttribute('required');
+      facultyOther.value = '';
+      clearFieldError('field-faculty'); // clear any lingering error
     }
   });
 
-  // ---------------------------------------------------------------
-  // VALIDATION HELPERS
-  // ---------------------------------------------------------------
-  function setError(fieldId, hasError) {
-    const el = document.getElementById(fieldId);
-    if (!el) return;
-    el.classList.toggle('has-error', hasError);
+  /* ============================================================
+     VALIDATION
+  ============================================================ */
+  function getFormData() {
+    return {
+      fullName:    document.getElementById('fullName').value.trim(),
+      email:       document.getElementById('email').value.trim(),
+      phone:       document.getElementById('phone').value.trim(),
+      faculty:     facultySelect.value,
+      facultyOther: facultyOther.value.trim()
+    };
   }
+
+  function setFieldError(fieldId, hasError) {
+    const el = document.getElementById(fieldId);
+    if (el) el.classList.toggle('has-error', hasError);
+  }
+
+  function clearFieldError(fieldId) {
+    setFieldError(fieldId, false);
+  }
+
+  // Clear error on input
+  ['fullName','email','phone'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      clearFieldError('field-' + (id === 'fullName' ? 'name' : id));
+    });
+  });
+  facultySelect.addEventListener('change', () => clearFieldError('field-faculty'));
+  facultyOther.addEventListener('input', () => clearFieldError('field-faculty'));
 
   function validate(data) {
-    let valid = true;
+    let ok = true;
 
-    if (!data.fullName.trim()) { setError('field-name', true); valid = false; }
-    else setError('field-name', false);
-
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim());
-    if (!emailOk) { setError('field-email', true); valid = false; }
-    else setError('field-email', false);
-
-    const phoneOk = data.phone.replace(/[\s-]/g, '').length >= 10;
-    if (!phoneOk) { setError('field-phone', true); valid = false; }
-    else setError('field-phone', false);
-
-    if (!data.faculty || (data.faculty === 'Other' && !data.facultyOther.trim())) {
-      setError('field-faculty', true); valid = false;
+    if (!data.fullName) {
+      setFieldError('field-name', true); ok = false;
     } else {
-      setError('field-faculty', false);
+      setFieldError('field-name', false);
     }
 
-    return valid;
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(data.email)) {
+      setFieldError('field-email', true); ok = false;
+    } else {
+      setFieldError('field-email', false);
+    }
+
+    const digitsOnly = data.phone.replace(/[\s\-().+]/g, '');
+    if (digitsOnly.length < 10) {
+      setFieldError('field-phone', true); ok = false;
+    } else {
+      setFieldError('field-phone', false);
+    }
+
+    if (!data.faculty || (data.faculty === 'Other' && !data.facultyOther)) {
+      setFieldError('field-faculty', true); ok = false;
+    } else {
+      setFieldError('field-faculty', false);
+    }
+
+    return ok;
   }
 
-  // ---------------------------------------------------------------
-  // BACKEND SUBMISSION — PLACEHOLDER
-  // ---------------------------------------------------------------
-  // TODO: Replace this stub once the Apps Script Web App is deployed.
-  // When ready, swap this function body for something like:
-  //
-  //   const res = await fetch('YOUR_APPS_SCRIPT_WEB_APP_URL', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify(data)
-  //   });
-  //   if (!res.ok) throw new Error('Submission failed');
-  //   return res.json();
-  //
-  // The Apps Script side owns: sequential ticket numbering (starting
-  // DGIC4-0070), writing the row to the Google Sheet, and sending the
-  // branded confirmation email containing the ticket number. None of
-  // that happens client-side by design — ticket numbers are never
-  // shown or generated in this page.
+  /* ============================================================
+     BACKEND SUBMISSION
+  ============================================================ */
   async function submitReservation(data) {
-    await new Promise((resolve) => setTimeout(resolve, 900));
-    return { ok: true };
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      // Apps Script Web Apps require no-cors OR the script must set
+      // CORS headers. "no-cors" means we can't read the response
+      // body, so we use a try/catch approach and trust the script
+      // to handle duplicate prevention server-side.
+      // If you have CORS configured on the script, remove the next line.
+      // mode: 'no-cors'
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
+    }
+
+    const json = await res.json();
+    return json; // { ok: true, ticketNumber: 'DGIC4-0070' }
+               // or { ok: true, alreadyRegistered: true, ticketNumber: '...' }
+               // or { ok: false, error: '...' }
   }
 
-  // ---------------------------------------------------------------
-  // CALENDAR GENERATION (fully functional, no backend needed)
-  // ---------------------------------------------------------------
-  function buildGoogleCalendarUrl() {
-    const params = new URLSearchParams({
+  /* ============================================================
+     CALENDAR HELPERS
+  ============================================================ */
+  function buildGCalUrl() {
+    const p = new URLSearchParams({
       action: 'TEMPLATE',
       text: EVENT.title,
       dates: `${EVENT.startUTC}/${EVENT.endUTC}`,
       details: EVENT.description,
       location: EVENT.location
     });
-    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+    return `https://calendar.google.com/calendar/render?${p.toString()}`;
   }
 
-  function buildIcsContent() {
+  function buildIcs() {
     const uid = `${Date.now()}-dgic4@nuesauniben`;
-    const dtstamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const stamp = new Date().toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
     return [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
@@ -733,7 +997,7 @@
       'CALSCALE:GREGORIAN',
       'BEGIN:VEVENT',
       `UID:${uid}`,
-      `DTSTAMP:${dtstamp}`,
+      `DTSTAMP:${stamp}`,
       `DTSTART:${EVENT.startUTC}`,
       `DTEND:${EVENT.endUTC}`,
       `SUMMARY:${EVENT.title}`,
@@ -745,61 +1009,102 @@
   }
 
   function downloadIcs() {
-    const blob = new Blob([buildIcsContent()], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'DGIC4.0-Grand-Finale.ics';
+    const blob = new Blob([buildIcs()], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = Object.assign(document.createElement('a'), {
+      href: url, download: 'DGIC4.0-Grand-Finale.ics'
+    });
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
 
-  document.getElementById('icsBtn').addEventListener('click', downloadIcs);
+  icsBtn.addEventListener('click', downloadIcs);
 
-  // ---------------------------------------------------------------
-  // FORM SUBMIT
-  // ---------------------------------------------------------------
-  const form = document.getElementById('seatForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const ticket = document.querySelector('.ticket');
-  const confirmPanel = document.getElementById('confirmPanel');
-  const confirmName = document.getElementById('confirmName');
-  const confirmBody = document.getElementById('confirmBody');
-  const gcalBtn = document.getElementById('gcalBtn');
+  /* ============================================================
+     UI HELPERS
+  ============================================================ */
+  function setLoading(isLoading) {
+    submitBtn.disabled = isLoading;
+    submitBtn.classList.toggle('loading', isLoading);
+  }
 
+  function showBanner(msg) {
+    errorBanner.textContent = msg;
+    errorBanner.classList.add('visible');
+  }
+
+  function hideBanner() {
+    errorBanner.classList.remove('visible');
+    errorBanner.textContent = '';
+  }
+
+  function showConfirm(data, ticketNumber, isReturn) {
+    const firstName = data.fullName.split(' ')[0];
+    const verb = isReturn ? 'Already reserved' : 'You\'re in';
+
+    confirmHeading.textContent = isReturn
+      ? `Welcome back, ${firstName}.`
+      : `You're in, ${firstName}.`;
+
+    confirmBody.textContent = isReturn
+      ? 'You already have a seat reserved with this email.'
+      : 'Your seat is confirmed.';
+
+    ticketNumDisplay.textContent = ticketNumber;
+    ticketNumDisplay.setAttribute('aria-label', `Your ticket number: ${ticketNumber}`);
+
+    confirmEmailLine.innerHTML = `Check <strong>${data.email}</strong> for your confirmation email and .ics calendar file.`;
+
+    gcalBtn.href = buildGCalUrl();
+
+    ticket.classList.add('confirmed');
+    confirmPanel.focus();
+    confirmPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ============================================================
+     FORM SUBMIT
+  ============================================================ */
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    hideBanner();
+    duplicateNotice.classList.remove('visible');
 
-    const data = {
-      fullName: document.getElementById('fullName').value,
-      email: document.getElementById('email').value,
-      phone: document.getElementById('phone').value,
-      faculty: document.getElementById('faculty').value,
-      facultyOther: document.getElementById('facultyOther').value
-    };
+    const data = getFormData();
 
-    if (!validate(data)) return;
+    if (!validate(data)) {
+      // Scroll to first error
+      const firstErr = form.querySelector('.field.has-error input, .field.has-error select');
+      if (firstErr) firstErr.focus();
+      return;
+    }
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Reserving…';
+    setLoading(true);
 
     try {
-      await submitReservation(data);
+      const result = await submitReservation(data);
 
-      const firstName = data.fullName.trim().split(' ')[0];
-      confirmName.textContent = `You're in, ${firstName}.`;
-      confirmBody.innerHTML = `Your seat confirmation and ticket number are on their way to <strong>${data.email}</strong>.`;
-      gcalBtn.href = buildGoogleCalendarUrl();
+      if (result.ok) {
+        showConfirm(data, result.ticketNumber, result.alreadyRegistered === true);
+      } else {
+        // Server returned ok: false with an error message
+        showBanner(result.error || 'Something went wrong. Please try again.');
+        setLoading(false);
+      }
 
-      ticket.classList.add('is-confirmed');
-      confirmPanel.classList.add('is-active');
-      confirmPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Reserve my seat';
-      alert('Something went wrong. Please try again.');
+      // Network error or non-JSON response
+      // Apps Script sometimes returns an HTML redirect on first deploy —
+      // if the script is correctly deployed and CORS allows it, this
+      // won't fire. Otherwise, surface a friendly message.
+      console.error('Submission error:', err);
+      showBanner(
+        'Couldn\'t connect to the server. Check your internet connection and try again. ' +
+        'If the problem persists, reach us on Telegram.'
+      );
+      setLoading(false);
     }
   });
 </script>
