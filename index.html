@@ -438,15 +438,12 @@
     color: var(--text-faint);
   }
 
-  .redirect-note {
-    margin-top: 14px;
-    font-size: 13px;
-    color: var(--text-faint);
+  .cal-btn.whatsapp {
+    background: #25D366;
+    color: #0B0B0C;
+    border: none;
   }
-  .redirect-note strong {
-    color: var(--cyan);
-    font-weight: 600;
-  }
+  .cal-btn.whatsapp:hover { background: #2fe375; }
 
   .error-text {
     color: #FF8A8A;
@@ -618,8 +615,12 @@
               </button>
             </div>
 
+            <a href="https://chat.whatsapp.com/L8SldFyDzAcI0lAeCYZA3U" id="whatsappBtn" class="cal-btn whatsapp" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.149-.149.297-.347.446-.521.149-.174.198-.298.298-.497.099-.198.05-.371-.05-.52-.099-.149-.605-1.459-.832-2.005-.181-.435-.367-.43-.479-.428-.149.002-.297-.001-.495 0-.198 0-.471.075-.694.347-.273.32-1.039 1.005-1.039 2.456 0 1.45 1.064 2.85 1.213 3.05.149.198 1.952 2.974 4.73 4.052 2.78 1.078 2.78.719 3.279.672.5-.05 1.758-.718 2.006-1.412.247-.694.247-1.288.173-1.412-.074-.124-.272-.198-.57-.347z"/><path d="M12.001 2C6.486 2 2 6.486 2 12.001c0 1.853.499 3.59 1.367 5.078L2 22l5.062-1.328A9.953 9.953 0 0 0 12.001 22C17.516 22 22 17.516 22 12.001S17.516 2 12.001 2zm0 18.182a8.16 8.16 0 0 1-4.42-1.298l-.317-.2-3.005.789.802-2.928-.207-.302a8.156 8.156 0 0 1-1.272-4.442c0-4.516 3.674-8.19 8.19-8.19s8.19 3.674 8.19 8.19-3.674 8.19-8.19 8.19h.001z"/></svg>
+              Join your seatmates on WhatsApp
+            </a>
+
             <p class="confirm-footnote">Didn't get the email? Check spam, or message us on <a href="https://t.me/+3pYyDiMcHAc0ZjE8" target="_blank" rel="noopener">Telegram</a>.</p>
-            <p class="redirect-note" id="redirectNote">Join your seatmates in the WhatsApp group — taking you there in <strong id="redirectCount">6</strong>s…</p>
           </div>
 
         </form>
@@ -645,11 +646,6 @@
     startUTC: "20260710T080000Z",
     endUTC:   "20260710T150000Z"
   };
-
-  // Registered-participants WhatsApp group — opened automatically
-  // a few seconds after a successful reservation confirms.
-  const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/L8SldFyDzAcI0lAeCYZA3U';
-  const REDIRECT_DELAY_SECONDS = 6;
 
   // ---------------------------------------------------------------
   // FACULTY "OTHER" TOGGLE
@@ -789,23 +785,46 @@
   document.getElementById('icsBtn').addEventListener('click', downloadIcs);
 
   // ---------------------------------------------------------------
-  // WHATSAPP AUTO-REDIRECT
-  // Fires once, REDIRECT_DELAY_SECONDS after the confirmation panel
-  // becomes visible. The countdown text updates live; opens in a new
-  // tab so the confirmation page (and calendar buttons) stay put.
+  // LOADING SEQUENCE
+  // Cycles the submit button's label through a sequence of playful
+  // status lines while the reservation request is in flight, so the
+  // wait reads as "something is happening" rather than a frozen
+  // "Reserving…" spinner. Timings are deliberately uneven — a quick
+  // first couple of beats, then it settles into a steady cadence —
+  // so it feels alive rather than metronomic. Stops cleanly whether
+  // the request resolves fast or slow.
   // ---------------------------------------------------------------
-  function startWhatsappRedirect() {
-    const countEl = document.getElementById('redirectCount');
-    let remaining = REDIRECT_DELAY_SECONDS;
+  const LOADING_STEPS = [
+    { text: 'Sweeping the array…',        delay: 450  },
+    { text: 'Searching for a free spot…', delay: 700  },
+    { text: 'Found one — inspecting it…', delay: 650  },
+    { text: 'Dusting it off…',            delay: 600  },
+    { text: 'Making it nice and cozy…',   delay: 700  },
+    { text: 'Engraving your ticket…',     delay: 650  },
+    { text: 'Logging you in…',            delay: 99999 } // holds here until resolved
+  ];
 
-    const tick = setInterval(() => {
-      remaining -= 1;
-      if (countEl) countEl.textContent = String(Math.max(remaining, 0));
-      if (remaining <= 0) {
-        clearInterval(tick);
-        window.open(WHATSAPP_GROUP_URL, '_blank', 'noopener');
+  function startLoadingSequence(buttonEl) {
+    let i = 0;
+    let cancelled = false;
+    let timeoutId = null;
+
+    function step() {
+      if (cancelled) return;
+      buttonEl.textContent = LOADING_STEPS[i].text;
+      if (i < LOADING_STEPS.length - 1) {
+        timeoutId = setTimeout(() => {
+          i += 1;
+          step();
+        }, LOADING_STEPS[i].delay);
       }
-    }, 1000);
+    }
+    step();
+
+    return function stop() {
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }
 
   // ---------------------------------------------------------------
@@ -833,7 +852,7 @@
     if (!validate(data)) return;
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Reserving…';
+    const stopLoadingSequence = startLoadingSequence(submitBtn);
 
     try {
       const result = await submitReservation(data);
@@ -849,12 +868,12 @@
 
       gcalBtn.href = buildGoogleCalendarUrl();
 
+      stopLoadingSequence();
       ticket.classList.add('is-confirmed');
       confirmPanel.classList.add('is-active');
       confirmPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      startWhatsappRedirect();
     } catch (err) {
+      stopLoadingSequence();
       submitBtn.disabled = false;
       submitBtn.textContent = 'Reserve my seat';
       alert(err.message || 'Something went wrong. Please try again.');
