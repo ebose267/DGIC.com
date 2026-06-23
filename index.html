@@ -438,6 +438,16 @@
     color: var(--text-faint);
   }
 
+  .redirect-note {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+  .redirect-note strong {
+    color: var(--cyan);
+    font-weight: 600;
+  }
+
   .error-text {
     color: #FF8A8A;
     font-size: 12.5px;
@@ -609,6 +619,7 @@
             </div>
 
             <p class="confirm-footnote">Didn't get the email? Check spam, or message us on <a href="https://t.me/+3pYyDiMcHAc0ZjE8" target="_blank" rel="noopener">Telegram</a>.</p>
+            <p class="redirect-note" id="redirectNote">Join your seatmates in the WhatsApp group — taking you there in <strong id="redirectCount">6</strong>s…</p>
           </div>
 
         </form>
@@ -634,6 +645,11 @@
     startUTC: "20260710T080000Z",
     endUTC:   "20260710T150000Z"
   };
+
+  // Registered-participants WhatsApp group — opened automatically
+  // a few seconds after a successful reservation confirms.
+  const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/L8SldFyDzAcI0lAeCYZA3U';
+  const REDIRECT_DELAY_SECONDS = 6;
 
   // ---------------------------------------------------------------
   // FACULTY "OTHER" TOGGLE
@@ -773,6 +789,26 @@
   document.getElementById('icsBtn').addEventListener('click', downloadIcs);
 
   // ---------------------------------------------------------------
+  // WHATSAPP AUTO-REDIRECT
+  // Fires once, REDIRECT_DELAY_SECONDS after the confirmation panel
+  // becomes visible. The countdown text updates live; opens in a new
+  // tab so the confirmation page (and calendar buttons) stay put.
+  // ---------------------------------------------------------------
+  function startWhatsappRedirect() {
+    const countEl = document.getElementById('redirectCount');
+    let remaining = REDIRECT_DELAY_SECONDS;
+
+    const tick = setInterval(() => {
+      remaining -= 1;
+      if (countEl) countEl.textContent = String(Math.max(remaining, 0));
+      if (remaining <= 0) {
+        clearInterval(tick);
+        window.open(WHATSAPP_GROUP_URL, '_blank', 'noopener');
+      }
+    }, 1000);
+  }
+
+  // ---------------------------------------------------------------
   // FORM SUBMIT
   // ---------------------------------------------------------------
   const form = document.getElementById('seatForm');
@@ -816,6 +852,8 @@
       ticket.classList.add('is-confirmed');
       confirmPanel.classList.add('is-active');
       confirmPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      startWhatsappRedirect();
     } catch (err) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Reserve my seat';
